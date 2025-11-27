@@ -12,7 +12,6 @@
 
 // Minimal STB image loading (you'll need stb_image.h)
 // Download from: https://github.com/nothings/stb
-// For now, I'll provide the structure for you to add it
 
 #define IMG_SIZE 64  // Resize all images to 64x64
 #define INPUT_SIZE (IMG_SIZE * IMG_SIZE * 3)  // RGB channels
