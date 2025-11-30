@@ -12,6 +12,7 @@
 
 // Minimal STB image loading (you'll need stb_image.h)
 // Download from: https://github.com/nothings/stb
+// Why this comment? It's included in the repo.
 
 #define IMG_SIZE 64  // Resize all images to 64x64
 #define INPUT_SIZE (IMG_SIZE * IMG_SIZE * 3)  // RGB channels
@@ -20,11 +21,7 @@
 #define LEARNING_RATE 0.001
 #define EPOCHS 50
 #define MAX_IMAGES 1000
-
-typedef struct {
-    float *data;
-    int size;
-} Vector;
+#define DATA_SPLIT_RATIO 0.8  // 80% training, 20% validation
 
 typedef struct {
     float **weights;
@@ -49,16 +46,7 @@ float randf() {
     return (float)rand() / (float)RAND_MAX;
 }
 
-Vector create_vector(int size) {
-    Vector v;
-    v.size = size;
-    v.data = (float*)calloc(size, sizeof(float));
-    return v;
-}
-
-void free_vector(Vector *v) {
-    free(v->data);
-}
+//Removed Vector type and related functions as they are not used in the current implementation
 
 Layer create_layer(int rows, int cols) {
     Layer layer;
@@ -68,8 +56,8 @@ Layer create_layer(int rows, int cols) {
     for (int i = 0; i < rows; i++) {
         layer.weights[i] = (float*)malloc(cols * sizeof(float));
         for (int j = 0; j < cols; j++) {
-            layer.weights[i][j] = (randf() - 0.5f) * 0.1f;  // Xavier init
-        }
+            layer.weights[i][j] = (randf() - 0.5f) * 0.1f;  // Xavier init 
+        } //Who is Xavier crying_emoji
     }
     layer.biases = (float*)calloc(rows, sizeof(float));
     return layer;
@@ -192,7 +180,7 @@ Image load_and_resize_image(const char *filename, int label) {
     if (!data) {
         printf("Cannot load %s: %s\n", filename, stbi_failure_reason());
         memset(img.pixels, 0, INPUT_SIZE * sizeof(float));
-        return img;
+        return img; // Returns a black image on failure, maybe it is better to handle differently
     }
     
     unsigned char *resized = (unsigned char*)malloc(IMG_SIZE * IMG_SIZE * 3);
@@ -253,6 +241,7 @@ int load_images_from_folder(const char *folder_path, int label, Image *images, i
     return count;
 }
 
+
 // ============= Training =============
 
 void shuffle_images(Image *images, int count) {
@@ -262,6 +251,32 @@ void shuffle_images(Image *images, int count) {
         images[i] = images[j];
         images[j] = temp;
     }
+}
+
+void split_dataset(Image *images, int total_count, float train_ratio,
+                   Image **train_set, int *train_count,
+                   Image **val_set, int *val_count) {
+    if (total_count <= 0) {
+        *train_set = *val_set = NULL;
+        *train_count = *val_count = 0;
+        return;
+    }
+
+    if (train_ratio < 0.0f) train_ratio = 0.0f;
+    if (train_ratio > 1.0f) train_ratio = 1.0f;
+
+    shuffle_images(images, total_count);
+
+    int train_samples = (int)(train_ratio * total_count);
+    if (total_count > 1) {
+        if (train_samples < 1) train_samples = 1;
+        if (train_samples > total_count - 1) train_samples = total_count - 1;
+    }
+
+    *train_set = images;
+    *train_count = train_samples;
+    *val_set = images + train_samples;
+    *val_count = total_count - train_samples;
 }
 
 void train(NeuralNetwork *nn, Image *images, int count, int epochs) {
@@ -296,6 +311,78 @@ void train(NeuralNetwork *nn, Image *images, int count, int epochs) {
     free(output);
 }
 
+int save_network(const NeuralNetwork *nn, const char *path) {
+    FILE *f = fopen(path, "wb");
+    if (!f) return 0;
+
+    fwrite(&nn->layer1.rows, sizeof(int), 1, f);
+    fwrite(&nn->layer1.cols, sizeof(int), 1, f);
+    for (int i = 0; i < nn->layer1.rows; ++i)
+        fwrite(nn->layer1.weights[i], sizeof(float), nn->layer1.cols, f);
+    fwrite(nn->layer1.biases, sizeof(float), nn->layer1.rows, f);
+
+    fwrite(&nn->layer2.rows, sizeof(int), 1, f);
+    fwrite(&nn->layer2.cols, sizeof(int), 1, f);
+    for (int i = 0; i < nn->layer2.rows; ++i)
+        fwrite(nn->layer2.weights[i], sizeof(float), nn->layer2.cols, f);
+    fwrite(nn->layer2.biases, sizeof(float), nn->layer2.rows, f);
+
+    fclose(f);
+    return 1;
+}
+
+// Load a saved network file (catdog.nn)
+int load_network(NeuralNetwork *nn, const char *path) {
+    FILE *f = fopen(path, "rb");
+    if (!f) return 0;
+
+    int r1, c1, r2, c2;
+    if (fread(&r1, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
+    if (fread(&c1, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
+
+    // Free any existing layers to avoid leaks
+    free_layer(&nn->layer1);
+
+    // Create layer with same dims
+    nn->layer1 = create_layer(r1, c1);
+    for (int i = 0; i < r1; ++i) {
+        if (fread(nn->layer1.weights[i], sizeof(float), c1, f) != (size_t)c1) { fclose(f); return 0; }
+    }
+    if (fread(nn->layer1.biases, sizeof(float), r1, f) != (size_t)r1) { fclose(f); return 0; }
+
+    if (fread(&r2, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
+    if (fread(&c2, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
+
+    free_layer(&nn->layer2);
+    nn->layer2 = create_layer(r2, c2);
+    for (int i = 0; i < r2; ++i) {
+        if (fread(nn->layer2.weights[i], sizeof(float), c2, f) != (size_t)c2) { fclose(f); return 0; }
+    }
+    if (fread(nn->layer2.biases, sizeof(float), r2, f) != (size_t)r2) { fclose(f); return 0; }
+
+    fclose(f);
+    return 1;
+}
+
+// Evaluate network on an image set (no weight updates). Returns loss and accuracy via pointers.
+void evaluate_network(NeuralNetwork *nn, Image *images, int count, float *out_loss, float *out_acc) {
+    if (count <= 0) { if (out_loss) *out_loss = 0.0f; if (out_acc) *out_acc = 0.0f; return; }
+    float *hidden = (float*)malloc(HIDDEN_SIZE * sizeof(float));
+    float *output = (float*)malloc(OUTPUT_SIZE * sizeof(float));
+    float total_loss = 0.0f;
+    int correct = 0;
+    for (int i = 0; i < count; ++i) {
+        forward(nn, images[i].pixels, hidden, output);
+        total_loss -= logf(output[images[i].label] + 1e-10f);
+        int pred = output[0] > output[1] ? 0 : 1;
+        if (pred == images[i].label) ++correct;
+    }
+    if (out_loss) *out_loss = total_loss / count;
+    if (out_acc) *out_acc = 100.0f * ((float)correct / count);
+    free(hidden);
+    free(output);
+}
+
 // ============= Main =============
 
 int main() {
@@ -314,18 +401,50 @@ int main() {
     
     if (total_count == 0) {
         printf("No images loaded! Please check your folder paths.\n");
-        printf("Expected folders: './cats' and './dogs'\n");
+        printf("Expected folders: './PetImages/Cat' and './PetImages/Dog'\n");
         free(images);
         return 1;
     }
     
-    // Create and train network
+    Image *train_set = NULL;
+    Image *val_set = NULL;
+    int train_count = 0;
+    int val_count = 0;
+    split_dataset(images, total_count, DATA_SPLIT_RATIO,
+                  &train_set, &train_count, &val_set, &val_count);
+
+    printf("Training samples: %d (%.2f%%)\n", train_count,
+           total_count ? (100.0f * train_count / total_count) : 0.0f);
+    printf("Validation samples: %d (%.2f%%)\n\n", val_count,
+           total_count ? (100.0f * val_count / total_count) : 0.0f);
+
     NeuralNetwork nn = create_network();
+    // try to reuse existing file if present
+    if (load_network(&nn, "catdog.nn")) {
+        float loss, acc;
+        evaluate_network(&nn, val_set, val_count, &loss, &acc);
+        printf("Loaded saved network — validation before training: Loss=%.4f Acc=%.2f%%\n", loss, acc);
+    } else {
+        printf("No saved network found — training from scratch.\n");
+    }
+
     printf("Training neural network...\n\n");
-    train(&nn, images, total_count, EPOCHS);
-    
+    train(&nn, train_set, train_count, EPOCHS);
+
     printf("\nTraining complete!\n");
-    
+
+    // After training evaluate on validation set
+    if (val_count > 0) {
+        float val_loss, val_acc;
+        evaluate_network(&nn, val_set, val_count, &val_loss, &val_acc);
+        printf("Validation after training: Loss=%.4f Acc=%.2f%%\n", val_loss, val_acc);
+    }
+
+    if (save_network(&nn, "catdog.nn"))
+        printf("Saved network to catdog.nn\n");
+    else
+        printf("Failed to save network!\n");
+
     // Cleanup
     for (int i = 0; i < total_count; i++) {
         free(images[i].pixels);
