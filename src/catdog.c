@@ -1,44 +1,15 @@
+#include "catdog.h"
+
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <math.h>
 #include <string.h>
 #include <dirent.h>
-#include <time.h>
 
 #define STB_IMAGE_IMPLEMENTATION
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image.h"
 #include "stb_image_resize2.h"
-
-// Minimal STB image loading (you'll need stb_image.h)
-// Download from: https://github.com/nothings/stb
-// Why this comment? It's included in the repo.
-
-#define IMG_SIZE 64  // Resize all images to 64x64
-#define INPUT_SIZE (IMG_SIZE * IMG_SIZE * 3)  // RGB channels
-#define HIDDEN_SIZE 128
-#define OUTPUT_SIZE 2  // Cat or Dog
-#define LEARNING_RATE 0.001
-#define EPOCHS 50
-#define MAX_IMAGES 1000
-#define DATA_SPLIT_RATIO 0.8  // 80% training, 20% validation
-
-typedef struct {
-    float **weights;
-    float *biases;
-    int rows;
-    int cols;
-} Layer;
-
-typedef struct {
-    Layer layer1;  // Input to hidden
-    Layer layer2;  // Hidden to output
-} NeuralNetwork;
-
-typedef struct {
-    float *pixels;  // Normalized pixel values [0, 1]
-    int label;      // 0 for cat, 1 for dog
-} Image;
 
 // ============= Utility Functions =============
 
@@ -383,74 +354,4 @@ void evaluate_network(NeuralNetwork *nn, Image *images, int count, float *out_lo
     free(output);
 }
 
-// ============= Main =============
 
-int main() {
-    srand(time(NULL));
-    
-    printf("=== Cat vs Dog Classifier ===\n\n");
-    
-    // Load images
-    Image *images = (Image*)malloc(MAX_IMAGES * sizeof(Image));
-    int cat_count = load_images_from_folder("PetImages/Cat", 0, images, MAX_IMAGES / 2);
-    int dog_count = load_images_from_folder("PetImages/Dog", 1, images + cat_count, MAX_IMAGES / 2);
-    int total_count = cat_count + dog_count;
-    
-    printf("\nLoaded %d cat images and %d dog images\n", cat_count, dog_count);
-    printf("Total images: %d\n\n", total_count);
-    
-    if (total_count == 0) {
-        printf("No images loaded! Please check your folder paths.\n");
-        printf("Expected folders: './PetImages/Cat' and './PetImages/Dog'\n");
-        free(images);
-        return 1;
-    }
-    
-    Image *train_set = NULL;
-    Image *val_set = NULL;
-    int train_count = 0;
-    int val_count = 0;
-    split_dataset(images, total_count, DATA_SPLIT_RATIO,
-                  &train_set, &train_count, &val_set, &val_count);
-
-    printf("Training samples: %d (%.2f%%)\n", train_count,
-           total_count ? (100.0f * train_count / total_count) : 0.0f);
-    printf("Validation samples: %d (%.2f%%)\n\n", val_count,
-           total_count ? (100.0f * val_count / total_count) : 0.0f);
-
-    NeuralNetwork nn = create_network();
-    // try to reuse existing file if present
-    if (load_network(&nn, "catdog.nn")) {
-        float loss, acc;
-        evaluate_network(&nn, val_set, val_count, &loss, &acc);
-        printf("Loaded saved network — validation before training: Loss=%.4f Acc=%.2f%%\n", loss, acc);
-    } else {
-        printf("No saved network found — training from scratch.\n");
-    }
-
-    printf("Training neural network...\n\n");
-    train(&nn, train_set, train_count, EPOCHS);
-
-    printf("\nTraining complete!\n");
-
-    // After training evaluate on validation set
-    if (val_count > 0) {
-        float val_loss, val_acc;
-        evaluate_network(&nn, val_set, val_count, &val_loss, &val_acc);
-        printf("Validation after training: Loss=%.4f Acc=%.2f%%\n", val_loss, val_acc);
-    }
-
-    if (save_network(&nn, "catdog.nn"))
-        printf("Saved network to catdog.nn\n");
-    else
-        printf("Failed to save network!\n");
-
-    // Cleanup
-    for (int i = 0; i < total_count; i++) {
-        free(images[i].pixels);
-    }
-    free(images);
-    free_network(&nn);
-    
-    return 0;
-}

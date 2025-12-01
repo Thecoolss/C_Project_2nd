@@ -1,0 +1,1 @@
+/usr/bin/cc -Wl,-search_paths_first -Wl,-headerpad_max_install_names CMakeFiles/catdog_tests.dir/tests/test_network.c.o -o catdog_tests  libcatdog_lib.a -lm
