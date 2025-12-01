@@ -1,0 +1,11 @@
+name: nn_c_project
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - gcc
+  - cmake
+  - make
+  

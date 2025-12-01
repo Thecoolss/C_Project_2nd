@@ -48,19 +48,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Caskroom/miniforge/base/bin/cmake
+CMAKE_COMMAND = /home/coolss/miniforge3/envs/nn_c_project/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Caskroom/miniforge/base/bin/cmake -E rm -f
+RM = /home/coolss/miniforge3/envs/nn_c_project/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd
+CMAKE_SOURCE_DIR = /home/coolss/Uni_Projects/C_Project/C_Project_2nd
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build
+CMAKE_BINARY_DIR = /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -68,7 +68,7 @@ CMAKE_BINARY_DIR = /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build
 # Special rule for the target test
 test:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running tests..."
-	/opt/homebrew/Caskroom/miniforge/base/bin/ctest $(ARGS)
+	/home/coolss/miniforge3/envs/nn_c_project/bin/ctest $(ARGS)
 .PHONY : test
 
 # Special rule for the target test
@@ -78,7 +78,7 @@ test/fast: test
 # Special rule for the target edit_cache
 edit_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake cache editor..."
-	/opt/homebrew/Caskroom/miniforge/base/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/coolss/miniforge3/envs/nn_c_project/bin/ccmake -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -88,7 +88,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Running CMake to regenerate build system..."
-	/opt/homebrew/Caskroom/miniforge/base/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	/home/coolss/miniforge3/envs/nn_c_project/bin/cmake --regenerate-during-build -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -97,9 +97,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build/CMakeFiles /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

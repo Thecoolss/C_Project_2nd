@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/catdog_tests.dir/link.d"
   "CMakeFiles/catdog_tests.dir/tests/test_network.c.o"
   "CMakeFiles/catdog_tests.dir/tests/test_network.c.o.d"
   "catdog_tests"

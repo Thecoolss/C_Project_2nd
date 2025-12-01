@@ -10,7 +10,9 @@
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
 #include "stb_image.h"
 #include "stb_image_resize2.h"
+// keep this if we ned to deeply inspect the documentation of stb_image and stb_image_resize2: https://github.com/nothings/stb
 
+//NOTE: we still need to review the erro handling more to make sure it is robust enough for production use
 // ============= Utility Functions =============
 
 float randf() {
@@ -24,22 +26,52 @@ Layer create_layer(int rows, int cols) {
     layer.rows = rows;
     layer.cols = cols;
     layer.weights = (float**)malloc(rows * sizeof(float*));
+    if (!layer.weights) {
+        layer.rows = 0;
+        layer.cols = 0;
+        layer.biases = NULL;
+        return layer;
+    }
     for (int i = 0; i < rows; i++) {
         layer.weights[i] = (float*)malloc(cols * sizeof(float));
+        if (!layer.weights[i]) {
+            for (int k = 0; k < i; k++) free(layer.weights[k]);
+            free(layer.weights);
+            layer.weights = NULL;
+            layer.rows = 0;
+            layer.cols = 0;
+            layer.biases = NULL;
+            return layer;
+        }
         for (int j = 0; j < cols; j++) {
             layer.weights[i][j] = (randf() - 0.5f) * 0.1f;  // Xavier init 
         } //Who is Xavier crying_emoji
+        //some sh*t about initialization but idk why gpt commented that when it was reading through the code
     }
     layer.biases = (float*)calloc(rows, sizeof(float));
+    if (!layer.biases) {
+        for (int i = 0; i < rows; i++) free(layer.weights[i]);
+        free(layer.weights);
+        layer.weights = NULL;
+        layer.rows = 0;
+        layer.cols = 0;
+    }
     return layer;
 }
 
 void free_layer(Layer *layer) {
-    for (int i = 0; i < layer->rows; i++) {
-        free(layer->weights[i]);
+    if (!layer) return;
+    if (layer->weights) {
+        for (int i = 0; i < layer->rows; i++) {
+            free(layer->weights[i]);
+        }
+        free(layer->weights);
+        layer->weights = NULL;
     }
-    free(layer->weights);
-    free(layer->biases);
+    if (layer->biases) {
+        free(layer->biases);
+        layer->biases = NULL;
+    }
 }
 
 // ============= Activation Functions =============
@@ -79,11 +111,14 @@ NeuralNetwork create_network() {
 }
 
 void free_network(NeuralNetwork *nn) {
+    if (!nn) return;
     free_layer(&nn->layer1);
     free_layer(&nn->layer2);
 }
 
 void forward(NeuralNetwork *nn, float *input, float *hidden, float *output) {
+    if (!nn || !input || !hidden || !output) return;
+    if (!nn->layer1.weights || !nn->layer2.weights || !nn->layer1.biases || !nn->layer2.biases) return;
     // Layer 1: Input -> Hidden (with ReLU)
     for (int i = 0; i < HIDDEN_SIZE; i++) {
         float sum = nn->layer1.biases[i];
@@ -107,6 +142,8 @@ void forward(NeuralNetwork *nn, float *input, float *hidden, float *output) {
 
 void backward(NeuralNetwork *nn, float *input, float *hidden, float *output, 
               int true_label, float learning_rate) {
+    if (!nn || !input || !hidden || !output) return;
+    if (!nn->layer1.weights || !nn->layer2.weights || !nn->layer1.biases || !nn->layer2.biases) return;
     // Output layer gradients
     float output_grad[OUTPUT_SIZE];
     for (int i = 0; i < OUTPUT_SIZE; i++) {
@@ -144,6 +181,10 @@ void backward(NeuralNetwork *nn, float *input, float *hidden, float *output,
 Image load_and_resize_image(const char *filename, int label) {
     Image img;
     img.pixels = (float*)malloc(INPUT_SIZE * sizeof(float));
+    if (!img.pixels) {
+        img.label = label;
+        return img;
+    }
     img.label = label;
     
     int width, height, channels;
@@ -183,6 +224,7 @@ Image load_and_resize_image(const char *filename, int label) {
 }
 
 int load_images_from_folder(const char *folder_path, int label, Image *images, int max_count) {
+    if (!folder_path || !images || max_count <= 0) return 0;
     DIR *dir = opendir(folder_path);
     if (!dir) {
         printf("Cannot open directory: %s\n", folder_path);
@@ -216,6 +258,7 @@ int load_images_from_folder(const char *folder_path, int label, Image *images, i
 // ============= Training =============
 
 void shuffle_images(Image *images, int count) {
+    if (!images || count <= 0) return;
     for (int i = count - 1; i > 0; i--) {
         int j = rand() % (i + 1);
         Image temp = images[i];
@@ -227,6 +270,12 @@ void shuffle_images(Image *images, int count) {
 void split_dataset(Image *images, int total_count, float train_ratio,
                    Image **train_set, int *train_count,
                    Image **val_set, int *val_count) {
+    if (!train_set || !train_count || !val_set || !val_count) return;
+    if (!images || total_count <= 0) {
+        *train_set = *val_set = NULL;
+        *train_count = *val_count = 0;
+        return;
+    }
     if (total_count <= 0) {
         *train_set = *val_set = NULL;
         *train_count = *val_count = 0;
@@ -253,6 +302,11 @@ void split_dataset(Image *images, int total_count, float train_ratio,
 void train(NeuralNetwork *nn, Image *images, int count, int epochs) {
     float *hidden = (float*)malloc(HIDDEN_SIZE * sizeof(float));
     float *output = (float*)malloc(OUTPUT_SIZE * sizeof(float));
+    if (!nn || !images || count <= 0 || epochs <= 0 || !hidden || !output) {
+        if (hidden) free(hidden);
+        if (output) free(output);
+        return;
+    }
     
     for (int epoch = 0; epoch < epochs; epoch++) {
         shuffle_images(images, count);
@@ -283,8 +337,13 @@ void train(NeuralNetwork *nn, Image *images, int count, int epochs) {
 }
 
 int save_network(const NeuralNetwork *nn, const char *path) {
+    if (!nn || !path) return 0;
     FILE *f = fopen(path, "wb");
     if (!f) return 0;
+    if (!nn->layer1.weights || !nn->layer2.weights || !nn->layer1.biases || !nn->layer2.biases) {
+        fclose(f);
+        return 0;
+    }
 
     fwrite(&nn->layer1.rows, sizeof(int), 1, f);
     fwrite(&nn->layer1.cols, sizeof(int), 1, f);
@@ -304,6 +363,7 @@ int save_network(const NeuralNetwork *nn, const char *path) {
 
 // Load a saved network file (catdog.nn)
 int load_network(NeuralNetwork *nn, const char *path) {
+    if (!nn || !path) return 0;
     FILE *f = fopen(path, "rb");
     if (!f) return 0;
 
@@ -316,6 +376,7 @@ int load_network(NeuralNetwork *nn, const char *path) {
 
     // Create layer with same dims
     nn->layer1 = create_layer(r1, c1);
+    if (!nn->layer1.weights || !nn->layer1.biases) { fclose(f); return 0; }
     for (int i = 0; i < r1; ++i) {
         if (fread(nn->layer1.weights[i], sizeof(float), c1, f) != (size_t)c1) { fclose(f); return 0; }
     }
@@ -326,6 +387,7 @@ int load_network(NeuralNetwork *nn, const char *path) {
 
     free_layer(&nn->layer2);
     nn->layer2 = create_layer(r2, c2);
+    if (!nn->layer2.weights || !nn->layer2.biases) { fclose(f); return 0; }
     for (int i = 0; i < r2; ++i) {
         if (fread(nn->layer2.weights[i], sizeof(float), c2, f) != (size_t)c2) { fclose(f); return 0; }
     }
@@ -337,9 +399,17 @@ int load_network(NeuralNetwork *nn, const char *path) {
 
 // Evaluate network on an image set (no weight updates). Returns loss and accuracy via pointers.
 void evaluate_network(NeuralNetwork *nn, Image *images, int count, float *out_loss, float *out_acc) {
+    if (!nn || !images || count <= 0) { if (out_loss) *out_loss = 0.0f; if (out_acc) *out_acc = 0.0f; return; }
     if (count <= 0) { if (out_loss) *out_loss = 0.0f; if (out_acc) *out_acc = 0.0f; return; }
     float *hidden = (float*)malloc(HIDDEN_SIZE * sizeof(float));
     float *output = (float*)malloc(OUTPUT_SIZE * sizeof(float));
+    if (!hidden || !output) {
+        if (out_loss) *out_loss = 0.0f;
+        if (out_acc) *out_acc = 0.0f;
+        if (hidden) free(hidden);
+        if (output) free(output);
+        return;
+    }
     float total_loss = 0.0f;
     int correct = 0;
     for (int i = 0; i < count; ++i) {
@@ -353,5 +423,3 @@ void evaluate_network(NeuralNetwork *nn, Image *images, int count, float *out_lo
     free(hidden);
     free(output);
 }
-
-

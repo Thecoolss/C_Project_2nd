@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Caskroom/miniforge/base/bin/cmake
+CMAKE_COMMAND = /home/coolss/miniforge3/envs/nn_c_project/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Caskroom/miniforge/base/bin/cmake -E rm -f
+RM = /home/coolss/miniforge3/envs/nn_c_project/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd
+CMAKE_SOURCE_DIR = /home/coolss/Uni_Projects/C_Project/C_Project_2nd
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build
+CMAKE_BINARY_DIR = /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build
 
 # Utility rule file for ContinuousBuild.
 
@@ -67,7 +67,7 @@ include CMakeFiles/ContinuousBuild.dir/compiler_depend.make
 include CMakeFiles/ContinuousBuild.dir/progress.make
 
 CMakeFiles/ContinuousBuild:
-	/opt/homebrew/Caskroom/miniforge/base/bin/ctest -DMODEL=Continuous -DACTIONS=Build -S CMakeFiles/CTestScript.cmake -V
+	/home/coolss/miniforge3/envs/nn_c_project/bin/ctest -DMODEL=Continuous -DACTIONS=Build -S CMakeFiles/CTestScript.cmake -V
 
 CMakeFiles/ContinuousBuild.dir/codegen:
 .PHONY : CMakeFiles/ContinuousBuild.dir/codegen
@@ -85,6 +85,6 @@ CMakeFiles/ContinuousBuild.dir/clean:
 .PHONY : CMakeFiles/ContinuousBuild.dir/clean
 
 CMakeFiles/ContinuousBuild.dir/depend:
-	cd /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build/CMakeFiles/ContinuousBuild.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/coolss/Uni_Projects/C_Project/C_Project_2nd /home/coolss/Uni_Projects/C_Project/C_Project_2nd /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles/ContinuousBuild.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/ContinuousBuild.dir/depend
 

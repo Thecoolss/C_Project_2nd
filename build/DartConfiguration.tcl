@@ -4,17 +4,17 @@
 
 
 # Configuration directories and files
-SourceDirectory: /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd
-BuildDirectory: /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build
+SourceDirectory: /home/coolss/Uni_Projects/C_Project/C_Project_2nd
+BuildDirectory: /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build
 
 # Where to place the cost data store
 CostDataFile: 
 
 # Site is something like machine.domain, i.e. pragmatic.crd
-Site: Matheuss-MacBook-Air.local
+Site: DESKTOP-RMSI2A9
 
 # Build name is osname-revision-compiler, i.e. Linux-2.4.2-2smp-c++
-BuildName: Darwin-cc
+BuildName: Linux-cc
 
 # Subprojects
 LabelsForSubprojects: 
@@ -27,8 +27,8 @@ SubmitInactivityTimeout:
 NightlyStartTime: 00:00:00 EDT
 
 # Commands for the build/test/submit cycle
-ConfigureCommand: "/opt/homebrew/Caskroom/miniforge/base/bin/cmake" "/Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd"
-MakeCommand: /opt/homebrew/Caskroom/miniforge/base/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
+ConfigureCommand: "/home/coolss/miniforge3/envs/nn_c_project/bin/cmake" "/home/coolss/Uni_Projects/C_Project/C_Project_2nd"
+MakeCommand: /home/coolss/miniforge3/envs/nn_c_project/bin/cmake --build . --config "${CTEST_CONFIGURATION_TYPE}"
 DefaultCTestConfigurationType: Release
 
 # version control
@@ -81,7 +81,7 @@ MemoryCheckCommandOptions:
 MemoryCheckSuppressionFile: 
 
 # Coverage
-CoverageCommand: /usr/bin/gcov
+CoverageCommand: /home/coolss/miniforge3/envs/nn_c_project/bin/gcov
 CoverageExtraFlags: -l
 
 # Testing options

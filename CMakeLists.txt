@@ -13,7 +13,7 @@ add_library(catdog_lib STATIC
 target_include_directories(catdog_lib
     PUBLIC
         ${CMAKE_CURRENT_SOURCE_DIR}/include
-        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${CMAKE_CURRENT_SOURCE_DIR}/third_party
 )
 
 if(UNIX AND NOT APPLE)
@@ -38,4 +38,3 @@ if(CATDOG_BUILD_TESTS)
         COMMAND catdog_tests
     )
 endif()
-

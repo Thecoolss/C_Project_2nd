@@ -8,7 +8,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 
 # The set of dependency files which are needed:
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
-  "/Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/src/catdog.c" "CMakeFiles/catdog_lib.dir/src/catdog.c.o" "gcc" "CMakeFiles/catdog_lib.dir/src/catdog.c.o.d"
+  "/home/coolss/Uni_Projects/C_Project/C_Project_2nd/src/catdog.c" "CMakeFiles/catdog_lib.dir/src/catdog.c.o" "gcc" "CMakeFiles/catdog_lib.dir/src/catdog.c.o.d"
   )
 
 # Targets to which this target links which contain Fortran sources.

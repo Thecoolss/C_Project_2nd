@@ -44,19 +44,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /opt/homebrew/Caskroom/miniforge/base/bin/cmake
+CMAKE_COMMAND = /home/coolss/miniforge3/envs/nn_c_project/bin/cmake
 
 # The command to remove a file.
-RM = /opt/homebrew/Caskroom/miniforge/base/bin/cmake -E rm -f
+RM = /home/coolss/miniforge3/envs/nn_c_project/bin/cmake -E rm -f
 
 # Escaping for special characters.
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd
+CMAKE_SOURCE_DIR = /home/coolss/Uni_Projects/C_Project/C_Project_2nd
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build
+CMAKE_BINARY_DIR = /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build
 
 # Include any dependencies generated for this target.
 include CMakeFiles/catdog_lib.dir/depend.make
@@ -73,18 +73,18 @@ CMakeFiles/catdog_lib.dir/codegen:
 .PHONY : CMakeFiles/catdog_lib.dir/codegen
 
 CMakeFiles/catdog_lib.dir/src/catdog.c.o: CMakeFiles/catdog_lib.dir/flags.make
-CMakeFiles/catdog_lib.dir/src/catdog.c.o: /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/src/catdog.c
+CMakeFiles/catdog_lib.dir/src/catdog.c.o: /home/coolss/Uni_Projects/C_Project/C_Project_2nd/src/catdog.c
 CMakeFiles/catdog_lib.dir/src/catdog.c.o: CMakeFiles/catdog_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/catdog_lib.dir/src/catdog.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/catdog_lib.dir/src/catdog.c.o -MF CMakeFiles/catdog_lib.dir/src/catdog.c.o.d -o CMakeFiles/catdog_lib.dir/src/catdog.c.o -c /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/src/catdog.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/catdog_lib.dir/src/catdog.c.o"
+	/home/coolss/miniforge3/envs/nn_c_project/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -MD -MT CMakeFiles/catdog_lib.dir/src/catdog.c.o -MF CMakeFiles/catdog_lib.dir/src/catdog.c.o.d -o CMakeFiles/catdog_lib.dir/src/catdog.c.o -c /home/coolss/Uni_Projects/C_Project/C_Project_2nd/src/catdog.c
 
 CMakeFiles/catdog_lib.dir/src/catdog.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing C source to CMakeFiles/catdog_lib.dir/src/catdog.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/src/catdog.c > CMakeFiles/catdog_lib.dir/src/catdog.c.i
+	/home/coolss/miniforge3/envs/nn_c_project/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/coolss/Uni_Projects/C_Project/C_Project_2nd/src/catdog.c > CMakeFiles/catdog_lib.dir/src/catdog.c.i
 
 CMakeFiles/catdog_lib.dir/src/catdog.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling C source to assembly CMakeFiles/catdog_lib.dir/src/catdog.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/src/catdog.c -o CMakeFiles/catdog_lib.dir/src/catdog.c.s
+	/home/coolss/miniforge3/envs/nn_c_project/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/coolss/Uni_Projects/C_Project/C_Project_2nd/src/catdog.c -o CMakeFiles/catdog_lib.dir/src/catdog.c.s
 
 # Object files for target catdog_lib
 catdog_lib_OBJECTS = \
@@ -96,7 +96,7 @@ catdog_lib_EXTERNAL_OBJECTS =
 libcatdog_lib.a: CMakeFiles/catdog_lib.dir/src/catdog.c.o
 libcatdog_lib.a: CMakeFiles/catdog_lib.dir/build.make
 libcatdog_lib.a: CMakeFiles/catdog_lib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libcatdog_lib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C static library libcatdog_lib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/catdog_lib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/catdog_lib.dir/link.txt --verbose=$(VERBOSE)
 
@@ -109,6 +109,6 @@ CMakeFiles/catdog_lib.dir/clean:
 .PHONY : CMakeFiles/catdog_lib.dir/clean
 
 CMakeFiles/catdog_lib.dir/depend:
-	cd /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build /Users/matheusfunabashi/Desktop/c_proj/C_Project_2nd/build/CMakeFiles/catdog_lib.dir/DependInfo.cmake "--color=$(COLOR)"
+	cd /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/coolss/Uni_Projects/C_Project/C_Project_2nd /home/coolss/Uni_Projects/C_Project/C_Project_2nd /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles/catdog_lib.dir/DependInfo.cmake "--color=$(COLOR)"
 .PHONY : CMakeFiles/catdog_lib.dir/depend
 
