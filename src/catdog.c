@@ -44,9 +44,8 @@ Layer create_layer(int rows, int cols) {
             return layer;
         }
         for (int j = 0; j < cols; j++) {
-            layer.weights[i][j] = (randf() - 0.5f) * 0.1f;  // Xavier init 
-        } //Who is Xavier crying_emoji
-        //some sh*t about initialization but idk why gpt commented that when it was reading through the code
+            layer.weights[i][j] = (randf() - 0.5f) * 0.1f;
+        }
     }
     layer.biases = (float*)calloc(rows, sizeof(float));
     if (!layer.biases) {
@@ -119,7 +118,7 @@ void free_network(NeuralNetwork *nn) {
 void forward(NeuralNetwork *nn, float *input, float *hidden, float *output) {
     if (!nn || !input || !hidden || !output) return;
     if (!nn->layer1.weights || !nn->layer2.weights || !nn->layer1.biases || !nn->layer2.biases) return;
-    // Layer 1: Input -> Hidden (with ReLU)
+
     for (int i = 0; i < HIDDEN_SIZE; i++) {
         float sum = nn->layer1.biases[i];
         for (int j = 0; j < INPUT_SIZE; j++) {
@@ -128,7 +127,6 @@ void forward(NeuralNetwork *nn, float *input, float *hidden, float *output) {
         hidden[i] = relu(sum);
     }
     
-    // Layer 2: Hidden -> Output (with Softmax)
     float raw_output[OUTPUT_SIZE];
     for (int i = 0; i < OUTPUT_SIZE; i++) {
         float sum = nn->layer2.biases[i];
@@ -216,7 +214,7 @@ Image load_and_resize_image(const char *filename, int label) {
     stbi_image_free(data);
     
     for (int i = 0; i < INPUT_SIZE; i++) {
-        img.pixels[i] = (float)resized[i] / 255.0f;  // Normalize to [0, 1]
+        img.pixels[i] = (float)resized[i] / 255.0f;
     }
     
     free(resized);
@@ -240,7 +238,6 @@ int load_images_from_folder(const char *folder_path, int label, Image *images, i
         char filepath[512];
         snprintf(filepath, sizeof(filepath), "%s/%s", folder_path, entry->d_name);
         
-        // Check for common image extensions
         char *ext = strrchr(entry->d_name, '.');
         if (ext && (strcmp(ext, ".jpg") == 0 || strcmp(ext, ".jpeg") == 0 || 
                     strcmp(ext, ".png") == 0 || strcmp(ext, ".ppm") == 0)) {
@@ -299,37 +296,56 @@ void split_dataset(Image *images, int total_count, float train_ratio,
     *val_count = total_count - train_samples;
 }
 
-void train(NeuralNetwork *nn, Image *images, int count, int epochs) {
+void train(NeuralNetwork *nn, Image *train_images, int train_count, 
+           Image *val_images, int val_count, int epochs) {
     float *hidden = (float*)malloc(HIDDEN_SIZE * sizeof(float));
     float *output = (float*)malloc(OUTPUT_SIZE * sizeof(float));
-    if (!nn || !images || count <= 0 || epochs <= 0 || !hidden || !output) {
+    if (!nn || !train_images || train_count <= 0 || epochs <= 0 || !hidden || !output) {
         if (hidden) free(hidden);
         if (output) free(output);
         return;
     }
     
+    float best_val_loss = 1e9;
+    int patience = PATIENCE;
+    int no_improve_count = 0;
+    
     for (int epoch = 0; epoch < epochs; epoch++) {
-        shuffle_images(images, count);
+        shuffle_images(train_images, train_count);
         
         float total_loss = 0.0f;
         int correct = 0;
         
-        for (int i = 0; i < count; i++) {
-            forward(nn, images[i].pixels, hidden, output);
-            
-            // Calculate loss (cross-entropy)
-            total_loss -= logf(output[images[i].label] + 1e-10f);
-            
-            // Check accuracy
+        for (int i = 0; i < train_count; i++) {
+            forward(nn, train_images[i].pixels, hidden, output);
+            total_loss -= logf(output[train_images[i].label] + 1e-10f);
             int predicted = output[0] > output[1] ? 0 : 1;
-            if (predicted == images[i].label) correct++;
-            
-            // Backpropagation
-            backward(nn, images[i].pixels, hidden, output, images[i].label, LEARNING_RATE);
+            if (predicted == train_images[i].label) correct++;
+            backward(nn, train_images[i].pixels, hidden, output, 
+                     train_images[i].label, LEARNING_RATE);
         }
         
-        printf("Epoch %d/%d - Loss: %.4f - Accuracy: %.2f%%\n", 
-               epoch + 1, epochs, total_loss / count, 100.0f * correct / count);
+        printf("Epoch %d/%d - Train Loss: %.4f - Train Acc: %.2f%%", 
+               epoch + 1, epochs, total_loss / train_count, 
+               100.0f * correct / train_count);
+        
+        if (val_count > 0 && val_images) {
+            float val_loss, val_acc;
+            evaluate_network(nn, val_images, val_count, &val_loss, &val_acc);
+            printf(" | Val Loss: %.4f - Val Acc: %.2f%%", val_loss, val_acc);
+            
+            if (val_loss < best_val_loss) {
+                best_val_loss = val_loss;
+                no_improve_count = 0;
+            } else {
+                no_improve_count++;
+                if (no_improve_count >= patience) {
+                    printf("\nEarly stopping: val loss not improving\n");
+                    break;
+                }
+            }
+        }
+        printf("\n");
     }
     
     free(hidden);
@@ -345,23 +361,45 @@ int save_network(const NeuralNetwork *nn, const char *path) {
         return 0;
     }
 
-    fwrite(&nn->layer1.rows, sizeof(int), 1, f);
-    fwrite(&nn->layer1.cols, sizeof(int), 1, f);
-    for (int i = 0; i < nn->layer1.rows; ++i)
-        fwrite(nn->layer1.weights[i], sizeof(float), nn->layer1.cols, f);
-    fwrite(nn->layer1.biases, sizeof(float), nn->layer1.rows, f);
+    if (fwrite(&nn->layer1.rows, sizeof(int), 1, f) != 1) { fclose(f); return 0; } 
+    if (fwrite(&nn->layer1.cols, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
+    
+    for (int i = 0; i < nn->layer1.rows; ++i) {
+        if (fwrite(nn->layer1.weights[i], sizeof(float), nn->layer1.cols, f) != (size_t)nn->layer1.cols) {
+            fclose(f);
+            return 0;
+        }
+    }
+    
+    if (fwrite(nn->layer1.biases, sizeof(float), nn->layer1.rows, f) != (size_t)nn->layer1.rows) {
+        fclose(f);
+        return 0;
+    }
 
-    fwrite(&nn->layer2.rows, sizeof(int), 1, f);
-    fwrite(&nn->layer2.cols, sizeof(int), 1, f);
-    for (int i = 0; i < nn->layer2.rows; ++i)
-        fwrite(nn->layer2.weights[i], sizeof(float), nn->layer2.cols, f);
-    fwrite(nn->layer2.biases, sizeof(float), nn->layer2.rows, f);
+    if (fwrite(&nn->layer2.rows, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
+    if (fwrite(&nn->layer2.cols, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
+    
+    for (int i = 0; i < nn->layer2.rows; ++i) {
+        if (fwrite(nn->layer2.weights[i], sizeof(float), nn->layer2.cols, f) != (size_t)nn->layer2.cols) {
+            fclose(f);
+            return 0;
+        }
+    }
+    
+    if (fwrite(nn->layer2.biases, sizeof(float), nn->layer2.rows, f) != (size_t)nn->layer2.rows) {
+        fclose(f);
+        return 0;
+    }
+
+    if (fflush(f) != 0) {
+        fclose(f);
+        return 0;
+    }
 
     fclose(f);
     return 1;
 }
 
-// Load a saved network file (catdog.nn)
 int load_network(NeuralNetwork *nn, const char *path) {
     if (!nn || !path) return 0;
     FILE *f = fopen(path, "rb");
@@ -371,10 +409,8 @@ int load_network(NeuralNetwork *nn, const char *path) {
     if (fread(&r1, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
     if (fread(&c1, sizeof(int), 1, f) != 1) { fclose(f); return 0; }
 
-    // Free any existing layers to avoid leaks
     free_layer(&nn->layer1);
 
-    // Create layer with same dims
     nn->layer1 = create_layer(r1, c1);
     if (!nn->layer1.weights || !nn->layer1.biases) { fclose(f); return 0; }
     for (int i = 0; i < r1; ++i) {
@@ -397,7 +433,6 @@ int load_network(NeuralNetwork *nn, const char *path) {
     return 1;
 }
 
-// Evaluate network on an image set (no weight updates). Returns loss and accuracy via pointers.
 void evaluate_network(NeuralNetwork *nn, Image *images, int count, float *out_loss, float *out_acc) {
     if (!nn || !images || count <= 0) { if (out_loss) *out_loss = 0.0f; if (out_acc) *out_acc = 0.0f; return; }
     if (count <= 0) { if (out_loss) *out_loss = 0.0f; if (out_acc) *out_acc = 0.0f; return; }
