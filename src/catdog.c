@@ -118,7 +118,7 @@ void free_network(NeuralNetwork *nn) {
 void forward(NeuralNetwork *nn, float *input, float *hidden, float *output) {
     if (!nn || !input || !hidden || !output) return;
     if (!nn->layer1.weights || !nn->layer2.weights || !nn->layer1.biases || !nn->layer2.biases) return;
-    // Layer 1: Input -> Hidden (with ReLU)
+
     for (int i = 0; i < HIDDEN_SIZE; i++) {
         float sum = nn->layer1.biases[i];
         for (int j = 0; j < INPUT_SIZE; j++) {
@@ -127,7 +127,6 @@ void forward(NeuralNetwork *nn, float *input, float *hidden, float *output) {
         hidden[i] = relu(sum);
     }
     
-    // Layer 2: Hidden -> Output (with Softmax)
     float raw_output[OUTPUT_SIZE];
     for (int i = 0; i < OUTPUT_SIZE; i++) {
         float sum = nn->layer2.biases[i];
