@@ -1,0 +1,1 @@
+/home/coolss/miniforge3/envs/nn_c_project/bin/cc -Wl,--dependency-file=CMakeFiles/catdog_infer.dir/link.d CMakeFiles/catdog_infer.dir/src/infer.c.o -o catdog_infer  libcatdog_lib.a -lm

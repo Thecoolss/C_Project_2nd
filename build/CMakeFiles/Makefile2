@@ -65,12 +65,14 @@ CMAKE_BINARY_DIR = /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build
 # The main recursive "all" target.
 all: CMakeFiles/catdog_lib.dir/all
 all: CMakeFiles/catdog.dir/all
+all: CMakeFiles/catdog_infer.dir/all
 all: CMakeFiles/catdog_tests.dir/all
 .PHONY : all
 
 # The main recursive "codegen" target.
 codegen: CMakeFiles/catdog_lib.dir/codegen
 codegen: CMakeFiles/catdog.dir/codegen
+codegen: CMakeFiles/catdog_infer.dir/codegen
 codegen: CMakeFiles/catdog_tests.dir/codegen
 .PHONY : codegen
 
@@ -81,6 +83,7 @@ preinstall:
 # The main recursive "clean" target.
 clean: CMakeFiles/catdog_lib.dir/clean
 clean: CMakeFiles/catdog.dir/clean
+clean: CMakeFiles/catdog_infer.dir/clean
 clean: CMakeFiles/Experimental.dir/clean
 clean: CMakeFiles/Nightly.dir/clean
 clean: CMakeFiles/Continuous.dir/clean
@@ -119,7 +122,7 @@ clean: CMakeFiles/catdog_tests.dir/clean
 CMakeFiles/catdog_lib.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_lib.dir/build.make CMakeFiles/catdog_lib.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_lib.dir/build.make CMakeFiles/catdog_lib.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=3,4 "Built target catdog_lib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=5,6 "Built target catdog_lib"
 .PHONY : CMakeFiles/catdog_lib.dir/all
 
 # Build rule for subdir invocation for target.
@@ -136,7 +139,7 @@ catdog_lib: CMakeFiles/catdog_lib.dir/rule
 # codegen rule for target.
 CMakeFiles/catdog_lib.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_lib.dir/build.make CMakeFiles/catdog_lib.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=3,4 "Finished codegen for target catdog_lib"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=5,6 "Finished codegen for target catdog_lib"
 .PHONY : CMakeFiles/catdog_lib.dir/codegen
 
 # clean rule for target.
@@ -175,6 +178,38 @@ CMakeFiles/catdog.dir/codegen:
 CMakeFiles/catdog.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog.dir/build.make CMakeFiles/catdog.dir/clean
 .PHONY : CMakeFiles/catdog.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/catdog_infer.dir
+
+# All Build rule for target.
+CMakeFiles/catdog_infer.dir/all: CMakeFiles/catdog_lib.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=3,4 "Built target catdog_infer"
+.PHONY : CMakeFiles/catdog_infer.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/catdog_infer.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles 4
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/catdog_infer.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles 0
+.PHONY : CMakeFiles/catdog_infer.dir/rule
+
+# Convenience name for target.
+catdog_infer: CMakeFiles/catdog_infer.dir/rule
+.PHONY : catdog_infer
+
+# codegen rule for target.
+CMakeFiles/catdog_infer.dir/codegen:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/codegen
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=3,4 "Finished codegen for target catdog_infer"
+.PHONY : CMakeFiles/catdog_infer.dir/codegen
+
+# clean rule for target.
+CMakeFiles/catdog_infer.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/clean
+.PHONY : CMakeFiles/catdog_infer.dir/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/Experimental.dir
@@ -1079,7 +1114,7 @@ CMakeFiles/ContinuousSubmit.dir/clean:
 CMakeFiles/catdog_tests.dir/all: CMakeFiles/catdog_lib.dir/all
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_tests.dir/build.make CMakeFiles/catdog_tests.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_tests.dir/build.make CMakeFiles/catdog_tests.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=5,6 "Built target catdog_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=7,8 "Built target catdog_tests"
 .PHONY : CMakeFiles/catdog_tests.dir/all
 
 # Build rule for subdir invocation for target.
@@ -1096,7 +1131,7 @@ catdog_tests: CMakeFiles/catdog_tests.dir/rule
 # codegen rule for target.
 CMakeFiles/catdog_tests.dir/codegen:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_tests.dir/build.make CMakeFiles/catdog_tests.dir/codegen
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=5,6 "Finished codegen for target catdog_tests"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/coolss/Uni_Projects/C_Project/C_Project_2nd/build/CMakeFiles --progress-num=7,8 "Finished codegen for target catdog_tests"
 .PHONY : CMakeFiles/catdog_tests.dir/codegen
 
 # clean rule for target.

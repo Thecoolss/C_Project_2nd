@@ -25,6 +25,9 @@ endif()
 add_executable(catdog src/main.c)
 target_link_libraries(catdog PRIVATE catdog_lib)
 
+add_executable(catdog_infer src/infer.c)
+target_link_libraries(catdog_infer PRIVATE catdog_lib)
+
 option(CATDOG_BUILD_TESTS "Build the lightweight Cat/Dog unit tests" ON)
 
 if(CATDOG_BUILD_TESTS)

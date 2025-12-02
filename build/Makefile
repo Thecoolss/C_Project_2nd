@@ -153,6 +153,19 @@ catdog/fast:
 .PHONY : catdog/fast
 
 #=============================================================================
+# Target rules for targets named catdog_infer
+
+# Build rule for target.
+catdog_infer: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 catdog_infer
+.PHONY : catdog_infer
+
+# fast build rule for target.
+catdog_infer/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/build
+.PHONY : catdog_infer/fast
+
+#=============================================================================
 # Target rules for targets named Experimental
 
 # Build rule for target.
@@ -553,6 +566,30 @@ src/catdog.c.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_lib.dir/build.make CMakeFiles/catdog_lib.dir/src/catdog.c.s
 .PHONY : src/catdog.c.s
 
+src/infer.o: src/infer.c.o
+.PHONY : src/infer.o
+
+# target to build an object file
+src/infer.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/src/infer.c.o
+.PHONY : src/infer.c.o
+
+src/infer.i: src/infer.c.i
+.PHONY : src/infer.i
+
+# target to preprocess a source file
+src/infer.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/src/infer.c.i
+.PHONY : src/infer.c.i
+
+src/infer.s: src/infer.c.s
+.PHONY : src/infer.s
+
+# target to generate assembly for a file
+src/infer.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/catdog_infer.dir/build.make CMakeFiles/catdog_infer.dir/src/infer.c.s
+.PHONY : src/infer.c.s
+
 src/main.o: src/main.c.o
 .PHONY : src/main.o
 
@@ -639,11 +676,15 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... catdog"
+	@echo "... catdog_infer"
 	@echo "... catdog_lib"
 	@echo "... catdog_tests"
 	@echo "... src/catdog.o"
 	@echo "... src/catdog.i"
 	@echo "... src/catdog.s"
+	@echo "... src/infer.o"
+	@echo "... src/infer.i"
+	@echo "... src/infer.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

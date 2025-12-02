@@ -1,0 +1,28 @@
+CMakeFiles/catdog_infer.dir/src/infer.c.o: \
+ /home/coolss/Uni_Projects/C_Project/C_Project_2nd/src/infer.c \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/stdc-predef.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/stdio.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/libc-header-start.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/features.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/sys/cdefs.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/wordsize.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/long-double.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/gnu/stubs.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/gnu/stubs-64.h \
+ /home/coolss/miniforge3/envs/nn_c_project/lib/gcc/x86_64-conda-linux-gnu/15.2.0/include/stddef.h \
+ /home/coolss/miniforge3/envs/nn_c_project/lib/gcc/x86_64-conda-linux-gnu/15.2.0/include/stdarg.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/typesizes.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types/__fpos_t.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types/__mbstate_t.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types/__fpos64_t.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types/__FILE.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types/FILE.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/types/struct_FILE.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/stdio_lim.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/sys_errlist.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/stdlib.h \
+ /home/coolss/miniforge3/envs/nn_c_project/lib/gcc/x86_64-conda-linux-gnu/15.2.0/include-fixed/bits/floatn.h \
+ /home/coolss/miniforge3/envs/nn_c_project/lib/gcc/x86_64-conda-linux-gnu/15.2.0/include-fixed/bits/floatn-common.h \
+ /home/coolss/miniforge3/envs/nn_c_project/x86_64-conda-linux-gnu/sysroot/usr/include/bits/stdlib-float.h \
+ /home/coolss/Uni_Projects/C_Project/C_Project_2nd/include/catdog.h
