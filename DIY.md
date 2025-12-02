@@ -79,7 +79,15 @@ What `main()` should do:
 10. Save with `save_network("catdog.nn")`.
 11. Free all allocated `pixels`, then `free_network`.
 
-## 6) Add the third-party headers
+## 6) Write a tiny inference helper: `src/infer.c`
+Purpose: load a saved model and classify one image from the command line.
+- Accept args: `<image_path> [model_path]`, defaulting the model path to `catdog.nn`.
+- Create the network and call `load_network`; if it fails, print a helpful message and exit.
+- Load/resize the image with `load_and_resize_image`.
+- Run `forward`, print the cat/dog probabilities, and state the predicted class.
+- Free the image pixels and the network before exiting.
+
+## 7) Add the third-party headers
 - Download `stb_image.h` and `stb_image_resize2.h` from the official stb repository (https://github.com/nothings/stb) and place them in `third_party/`.
 - In `src/catdog.c`, before including them, define:
   ```c
@@ -89,7 +97,7 @@ What `main()` should do:
   #include "stb_image_resize2.h"
   ```
 
-## 7) Optional: add a simple `CMakeLists.txt`
+## 8) Optional: add a simple `CMakeLists.txt`
 Minimal content:
 ```cmake
 cmake_minimum_required(VERSION 3.16)
@@ -102,21 +110,27 @@ if(UNIX) target_link_libraries(catdog_lib PUBLIC m) endif()
 
 add_executable(catdog src/main.c)
 target_link_libraries(catdog PRIVATE catdog_lib)
+
+add_executable(catdog_infer src/infer.c)
+target_link_libraries(catdog_infer PRIVATE catdog_lib)
 ```
 
-## 8) Compile the project
+## 9) Compile the project
 - **Simple GCC/Clang command (no CMake):**
   ```bash
-  gcc src/main.c src/catdog.c -Iinclude -Ithird_party -std=c11 -lm -o catdog   # Linux/macOS/WSL
-  gcc src/main.c src/catdog.c -Iinclude -Ithird_party -std=c11       -o catdog.exe  # Windows (MinGW/MSYS2)
+  gcc src/main.c  src/catdog.c -Iinclude -Ithird_party -std=c11 -lm -o catdog         # Linux/macOS/WSL
+  gcc src/infer.c src/catdog.c -Iinclude -Ithird_party -std=c11 -lm -o catdog_infer   # Linux/macOS/WSL
+  gcc src/main.c  src/catdog.c -Iinclude -Ithird_party -std=c11       -o catdog.exe       # Windows (MinGW/MSYS2)
+  gcc src/infer.c src/catdog.c -Iinclude -Ithird_party -std=c11       -o catdog_infer.exe # Windows (MinGW/MSYS2)
   ```
 - **With CMake:**
   ```bash
   cmake -S . -B build
   cmake --build build
   ```
+  This produces both `catdog` and `catdog_infer` (or their `.exe` variants).
 
-## 9) Run training
+## 10) Run training and inference
 From the project root (or `build/` if you used CMake):
 ```bash
 ./catdog          # or .\\catdog.exe on Windows
@@ -127,18 +141,25 @@ Epoch 1/50 - Loss: 0.69 - Accuracy: 52.00%
 ```
 Higher accuracy means it is learning. A `catdog.nn` file will appear when it saves the trained weights.
 
-## 10) Extend or tweak
+After training, classify a single image with your saved model:
+```bash
+./catdog_infer path/to/photo.jpg [path/to/catdog.nn]
+```
+Omit the second argument to use `catdog.nn` in the current directory.
+
+## 11) Extend or tweak
 - Change hyperparameters in `catdog.h` (`IMG_SIZE`, `HIDDEN_SIZE`, `EPOCHS`, `LEARNING_RATE`, `DATA_SPLIT_RATIO`).
 - Add early stopping: track validation loss and break if it worsens.
 - Add a predict helper: load `catdog.nn`, forward one image, print the probabilities.
 - Improve data handling: filter out unreadable files, add logging, or cap per-class counts.
 
-## 11) Quick checklist (copy/paste to follow)
+## 12) Quick checklist (copy/paste to follow)
 - [ ] Make folders: `include`, `src`, `third_party`, `PetImages/Cat`, `PetImages/Dog`.
 - [ ] Download `stb_image.h` and `stb_image_resize2.h` into `third_party/`.
 - [ ] Write `include/catdog.h` with constants, structs, and function prototypes.
 - [ ] Write `src/catdog.c` implementing layers, forward, backward, image loading, training, save/load.
 - [ ] Write `src/main.c` to wire everything: load data, split, train, evaluate, save.
+- [ ] Write `src/infer.c` to load a saved model and classify one image.
 - [ ] Put cat/dog photos into the right folders.
-- [ ] Compile (GCC/Clang or CMake).
-- [ ] Run `./catdog` and watch the training output.
+- [ ] Compile training and inference binaries (GCC/Clang or CMake).
+- [ ] Run `./catdog` to train; run `./catdog_infer <image>` to predict.

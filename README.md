@@ -48,13 +48,20 @@ Tips:
 - More images = better learning. Start with at least 20 per class if you can.
 
 ## Step 5: Build the app
+**A) Quick GCC/Clang build (no CMake):**
+```bash
+gcc src/main.c src/catdog.c -Iinclude -Ithird_party -std=c11 -lm -o catdog          # Linux/macOS/WSL
+gcc src/infer.c src/catdog.c -Iinclude -Ithird_party -std=c11 -lm -o catdog_infer   # Linux/macOS/WSL
+gcc src/main.c src/catdog.c -Iinclude -Ithird_party -std=c11 -o catdog.exe          # Windows (MinGW/MSYS2)
+gcc src/infer.c src/catdog.c -Iinclude -Ithird_party -std=c11 -o catdog_infer.exe   # Windows (MinGW/MSYS2)
+```
 
 **B) CMake build:**
 ```bash
 cmake -S . -B build
 cmake --build build
 ```
-The compiled app will be at `build/catdog` (or `build\\catdog.exe` on Windows).
+The compiled apps will be at `build/catdog` and `build/catdog_infer` (or the `.exe` variants on Windows).
 
 ## Step 6: Train and watch it learn
 From the project folder (or `build/` if you used CMake):
@@ -71,14 +78,21 @@ Accuracy climbing toward 100% means it is guessing better. At the end it writes 
 - To **reuse** the last trained model: just run `./catdog` again; it will load `catdog.nn` automatically and continue training.
 - To **start over**: delete `catdog.nn` and rerun.
 
-## Step 8: Optional: run the tiny tests
+## Step 8: Make a single prediction (after training)
+Use the inference helper to classify one image with your saved model:
+```bash
+./catdog_infer path/to/photo.jpg [path/to/catdog.nn]
+```
+If you omit the second argument, it defaults to `catdog.nn`. It prints cat/dog probabilities and the predicted class.
+
+## Step 9: Optional: run the tiny tests
 Only if you built with CMake:
 ```bash
 ctest --test-dir build
 ```
 You should see “All catdog unit tests passed.”
 
-## Step 9: Tweak how it learns (all in `include/catdog.h`)
+## Step 10: Tweak how it learns (all in `include/catdog.h`)
 - `IMG_SIZE` (default 64): resize target for every image. Larger = more detail but slower.
 - `HIDDEN_SIZE` (default 128): number of neurons in the middle layer.
 - `EPOCHS` (default 50): how many passes over all images.
