@@ -41,3 +41,7 @@ if(CATDOG_BUILD_TESTS)
         COMMAND catdog_tests
     )
 endif()
+
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/src)

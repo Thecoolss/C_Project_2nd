@@ -7,12 +7,14 @@ extern "C" {
 
 #define IMG_SIZE 64
 #define INPUT_SIZE (IMG_SIZE * IMG_SIZE * 3)
-#define HIDDEN_SIZE 128
+#define HIDDEN_SIZE 32
 #define OUTPUT_SIZE 2
 #define LEARNING_RATE 0.001f
 #define EPOCHS 50
 #define MAX_IMAGES 1000
 #define DATA_SPLIT_RATIO 0.8f
+#define SPLIT_SEED 42
+#define PATIENCE 100
 
 typedef struct {
     float **weights;
@@ -48,7 +50,8 @@ void shuffle_images(Image *images, int count);
 void split_dataset(Image *images, int total_count, float train_ratio,
                    Image **train_set, int *train_count,
                    Image **val_set, int *val_count);
-void train(NeuralNetwork *nn, Image *images, int count, int epochs);
+void train(NeuralNetwork *nn, Image *train_images, int train_count,
+           Image *val_images, int val_count, int epochs);
 
 int save_network(const NeuralNetwork *nn, const char *path);
 int load_network(NeuralNetwork *nn, const char *path);

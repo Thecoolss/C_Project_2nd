@@ -5,7 +5,7 @@
 #include "catdog.h"
 
 int main(void) {
-    srand((unsigned)time(NULL));
+    srand(SPLIT_SEED);
 
     printf("=== Cat vs Dog Classifier ===\n\n");
 
@@ -52,7 +52,7 @@ int main(void) {
     }
 
     printf("Training neural network...\n\n");
-    train(&nn, train_set, train_count, EPOCHS);
+    train(&nn, train_set, train_count, val_set, val_count, EPOCHS);
 
     printf("\nTraining complete!\n");
 
