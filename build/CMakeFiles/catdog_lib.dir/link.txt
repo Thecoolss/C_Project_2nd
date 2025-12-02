@@ -1,2 +1,0 @@
-/usr/bin/ar qc libcatdog_lib.a CMakeFiles/catdog_lib.dir/src/catdog.c.o
-/usr/bin/ranlib libcatdog_lib.a
