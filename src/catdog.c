@@ -43,8 +43,9 @@ Layer create_layer(int rows, int cols) {
             layer.biases = NULL;
             return layer;
         }
+        float scale = sqrtf(2.0f / (float)(rows + cols));
         for (int j = 0; j < cols; j++) {
-            layer.weights[i][j] = (randf() - 0.5f) * 0.1f;
+            layer.weights[i][j] = (randf() - 0.5f) * 2.0f * scale;
         }
     }
     layer.biases = (float*)calloc(rows, sizeof(float));
